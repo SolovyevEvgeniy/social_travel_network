@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Social</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Travel Social</h1>
+            <nav>
+                <div class="nav-auth">
+                    <button id="loginBtn">Войти</button>
+                </div>
+                <div class="nav-user" style="display: none;">
+                    <button id="profileBtn" class="profile-btn">
+                        <i class="fas fa-user"></i>
+                        <span>Мой профиль</span>
+                    </button>
+                    <button id="addPostBtn">Добавить пост</button>
+                    <button id="addAlbumBtn">Создать альбом</button>
+                    <button id="placesBtn" class="nav-btn">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Места</span>
+                    </button>
+                    <button id="logoutBtn">Выйти</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="content-container">
+                <div class="posts-feed" id="postsContainer">
+                    <!-- Посты будут добавлены через JavaScript -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Модальное окно входа -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h2>Вход</h2>
+                <form id="loginForm">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Пароль" required>
+                    <button type="submit">Войти</button>
+                </form>
+                <p class="form-footer">
+                    Нет аккаунта? <a href="#" id="showRegisterBtn">Зарегистрироваться</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Модальное окно регистрации -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <h2>Регистрация</h2>
+                <form id="registerForm">
+                    <input type="text" name="username" placeholder="Имя пользователя" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Пароль" required>
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+                <p class="form-footer">
+                    Уже есть аккаунт? <a href="#" id="showLoginBtn">Войти</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Модальное окно создания поста -->
+        <div id="addPostModal" class="modal">
+            <div class="modal-content">
+                <h2>Создать пост</h2>
+                <form id="addPostForm">
+                    <input type="text" name="title" placeholder="Заголовок" required>
+                    <textarea name="content" placeholder="Содержание поста" required></textarea>
+                    <input type="text" name="location" placeholder="Мстоположение">
+                    <input type="file" name="image" accept="image/*">
+                    <button type="submit">Опубликовать</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- AI Assistant -->
+        <div class="ai-assistant" id="aiAssistant">
+            <div class="ai-header">
+                <div class="ai-avatar">AI</div>
+                <div class="ai-title">Travel Assistant</div>
+                <button class="ai-minimize" id="aiMinimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+            <div class="ai-content" id="aiContent">
+                <div class="ai-messages" id="aiMessages">
+                    <div class="ai-message">
+                        Привет! Я ваш AI-помощник по путешествиям. Как я могу помочь вам сегодня?
+                    </div>
+                </div>
+                <div class="ai-input">
+                    <input type="text" id="aiInput" placeholder="Напишите сообщение...">
+                    <button id="aiSend">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Добавьте модальное окно профиля -->
+        <div id="profileModal" class="modal">
+            <div class="modal-content profile-content">
+                <div class="modal-header">
+                    <button class="close-button" onclick="document.getElementById('profileModal').style.display='none'">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="profile-header">
+                    <img src="" alt="Avatar" class="profile-avatar">
+                    <div class="profile-info">
+                        <h2 class="profile-name"></h2>
+                        <p class="profile-location"></p>
+                        <a href="#" class="profile-instagram" target="_blank"></a>
+                        <div class="profile-actions">
+                            <button id="followBtn" class="follow-btn">
+                                <i class="fas fa-user-plus"></i> Подписаться
+                            </button>
+                            <button id="messageBtn" class="message-btn">
+                                <i class="fas fa-envelope"></i> Написать
+                            </button>
+                        </div>
+                        <button id="editProfileBtn" class="edit-profile-btn">
+                            <i class="fas fa-edit"></i> Редактировать профиль
+                        </button>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="visitedCountries">0</span>
+                        <span class="stat-label">Стран</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="travelCount">0</span>
+                        <span class="stat-label">Путешестви</span>
+                    </div>
+                </div>
+                <div class="profile-about">
+                    <h3>Обо мне</h3>
+                    <p class="about-text"></p>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <h4>Интересы</h4>
+                        <p class="interests-text"></p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Стиль путешествий</h4>
+                        <p class="travel-style-text"></p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Любимые места</h4>
+                        <p class="favorite-places-text"></p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Следующая цель</h4>
+                        <p class="next-destination-text"></p>
+                    </div>
+                </div>
+                <div class="profile-posts">
+                    <h3>Путешествия</h3>
+                    <div class="user-posts-grid"></div>
+                </div>
+                <div class="post-comments">
+                    <h3>Комментарии</h3>
+                    <div class="comments-list"></div>
+                    <form class="comment-form">
+                        <textarea placeholder="Написать комментарий..."></textarea>
+                        <button type="submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Добавим модальное окно редактирования профиля -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Редактировать профиль</h2>
+                    <button class="close-button" onclick="document.getElementById('editProfileModal').style.display='none'">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label>Полное имя</label>
+                        <input type="text" name="full_name" placeholder="Ваше полное имя">
+                    </div>
+                    <div class="form-group">
+                        <label>Местоположение</label>
+                        <input type="text" name="location" placeholder="Город, Страна">
+                    </div>
+                    <div class="form-group">
+                        <label>О себе</label>
+                        <textarea name="about_me" placeholder="Расскажите о себе"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Instagram</label>
+                        <input type="text" name="instagram" placeholder="@ваш_инстаграм">
+                    </div>
+                    <div class="form-group">
+                        <label>Интересы</label>
+                        <input type="text" name="interests" placeholder="Фотография, Походы, Экскурсии...">
+                    </div>
+                    <div class="form-group">
+                        <label>Стиль путешествий</label>
+                        <input type="text" name="travel_style" placeholder="Бэкпекинг, Люкс, Экотуризм...">
+                    </div>
+                    <div class="form-group">
+                        <label>Любимые места</label>
+                        <input type="text" name="favorite_places" placeholder="Париж, Токио, Бали...">
+                    </div>
+                    <div class="form-group">
+                        <label>Следующая цель</label>
+                        <input type="text" name="next_destination" placeholder="Куда планируете поехать?">
+                    </div>
+                    <div class="form-group">
+                        <label>Количество посещенных стран</label>
+                        <input type="number" name="visited_countries" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Аватар</label>
+                        <input type="file" name="avatar" accept="image/*">
+                    </div>
+                    <button type="submit" class="submit-btn">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Добавьте в модальное окно создания маршрута -->
+        <div id="createRouteModal" class="modal">
+            <div class="modal-content route-content">
+                <div class="modal-header">
+                    <h2>Создать маршрут путешествия</h2>
+                    <button class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="createRouteForm">
+                    <div class="form-group">
+                        <label>Название маршрута</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea name="description" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Длительность (дней)</label>
+                            <input type="number" name="duration_days" min="1" required>
+                        </div>
+                        <div class="form-group half">
+                            <label>Бюджет ($)</label>
+                            <input type="number" name="estimated_budget" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Сложность</label>
+                        <select name="difficulty_level">
+                            <option value="easy">Легкий</option>
+                            <option value="medium">Средний</option>
+                            <option value="hard">Сложный</option>
+                        </select>
+                    </div>
+                    <div class="route-points">
+                        <h3>Точки маршрута</h3>
+                        <div id="routeMap" style="height: 400px;"></div>
+                        <div id="routePointsList"></div>
+                        <button type="button" id="addPointBtn">
+                            <i class="fas fa-plus"></i> Добавить точку
+                        </button>
+                    </div>
+                    <button type="submit" class="submit-btn">Создать маршрут</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно для сообщений -->
+        <div id="messageModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Сообщения</h2>
+                    <button class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="messages-container">
+                    <div class="messages-list"></div>
+                    <form class="message-form">
+                        <textarea placeholder="Написать сообщение..."></textarea>
+                        <button type="submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Добавьте модальное окно для мест -->
+        <div id="placesModal" class="modal">
+            <div class="modal-content places-content">
+                <div class="modal-header">
+                    <h2>Интересные места</h2>
+                    <div class="places-filters">
+                        <select id="categoryFilter">
+                            <option value="">Все категории</option>
+                            <option value="restaurant">Рестораны</option>
+                            <option value="hotel">Отели</option>
+                            <option value="attraction">Достопримечательности</option>
+                        </select>
+                        <input type="text" id="locationFilter" placeholder="Поиск по локации">
+                        <select id="ratingFilter">
+                            <option value="">Любой рейтинг</option>
+                            <option value="4">4+ звезды</option>
+                            <option value="4.5">4.5+ звезды</option>
+                        </select>
+                    </div>
+                    <button class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="places-grid" id="placesGrid">
+                    <!-- Места будут добавлены через JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html> 

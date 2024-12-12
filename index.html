@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelSocial - Социальная сеть для путешественников</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-bar">
+            <a href="/" class="logo">TravelSocial</a>
+            <div class="nav-links">
+                <a href="#home">Главная</a>
+                <a href="#places">Места</a>
+                <a href="#planning">Планирование</a>
+                <a href="#profile" id="profileLink">Профиль</a>
+            </div>
+            <div class="auth-buttons">
+                <button id="loginBtn">Войти</button>
+                <button id="registerBtn">Регистрация</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="feed" class="content-section">
+            <h2>Лента путешествий</h2>
+            <div class="posts-container" id="postsContainer">
+                <!-- Посты будут добавляться динамически -->
+            </div>
+        </section>
+
+        <section id="createPost" class="content-section">
+            <h2>Создать пост</h2>
+            <form id="postForm" class="post-form">
+                <input type="text" name="title" placeholder="Заголовок" required>
+                <textarea name="content" placeholder="Поделитесь своими впечатлениями о путешествии..." required></textarea>
+                <div class="image-upload">
+                    <label for="postImage">
+                        <i class="fas fa-camera"></i> Добавить фото
+                    </label>
+                    <input type="file" id="postImage" name="image" accept="image/*">
+                    <div id="imagePreview"></div>
+                </div>
+                <button type="submit">Опубликовать</button>
+            </form>
+        </section>
+
+        <section id="profile" class="content-section" style="display: none;">
+            <h2>Профиль пользователя</h2>
+            <div class="profile-content">
+                <div class="profile-info">
+                    <img id="userAvatar" src="default-avatar.png" alt="Аватар">
+                    <h3 id="userName">Имя пользователя</h3>
+                    <p id="userBio">Описание профиля</p>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="postsCount">0</span>
+                        <span class="stat-label">Постов</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="placesCount">0</span>
+                        <span class="stat-label">Мест посещено</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="chatbot" class="content-section">
+            <h2>Планирование путешествия</h2>
+            <div class="chatbot-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="bot-message">
+                        Привет! Я помогу вам спланировать путешествие. Расскажите, куда хотите поехать?
+                    </div>
+                </div>
+                <form id="chatForm" class="chat-form">
+                    <input type="text" name="message" placeholder="Введите ваше сообщение..." required>
+                    <button type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="places" class="content-section">
+            <h2>Популярные места</h2>
+            <div class="places-container">
+                <div class="places-grid" id="placesGrid">
+                    <!-- Места будут добавляться динамически -->
+                </div>
+                <div class="add-place">
+                    <button id="addPlaceBtn">
+                        <i class="fas fa-plus"></i> Добавить место
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tripPlanning" class="content-section">
+            <h2>Планирование путешествий</h2>
+            <div class="trip-planning-container">
+                <div class="create-trip">
+                    <button id="createTripBtn" class="primary-button">
+                        <i class="fas fa-plus"></i> Создать новое путешествие
+                    </button>
+                </div>
+                <div class="trips-list" id="tripsList">
+                    <!-- Путешествия будут добавляться динамически -->
+                </div>
+            </div>
+        </section>
+
+        <section id="photoAlbums" class="content-section">
+            <h2>Мои фотоальбомы</h2>
+            <div class="albums-container">
+                <div class="create-album">
+                    <form id="albumForm" class="album-form">
+                        <div class="image-upload multiple">
+                            <label for="albumPhotos">
+                                <i class="fas fa-images"></i> Выбрать фотографии
+                            </label>
+                            <input type="file" id="albumPhotos" multiple accept="image/*" required>
+                            <div id="albumPreview" class="preview-grid"></div>
+                        </div>
+                        <textarea name="description" placeholder="Описание альбома..." required></textarea>
+                        <div class="costs-section">
+                            <input type="number" name="cost" placeholder="Стоимость услуг" />
+                            <textarea name="additionalInfo" placeholder="Дополнительная информация..."></textarea>
+                        </div>
+                        <div class="privacy-settings">
+                            <label>Видимость альбома:</label>
+                            <select name="visibility">
+                                <option value="public">Публичный</option>
+                                <option value="private">Приватный</option>
+                                <option value="friends">Только друзья</option>
+                            </select>
+                        </div>
+                        <button type="submit">Создать альбом</button>
+                    </form>
+                </div>
+                <div id="albumsGrid" class="albums-grid">
+                    <!-- Альбомы будут добавляться динамически -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Вход</h2>
+            <form id="loginForm">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <input type="text" name="username" placeholder="Имя пользователя" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <input type="password" name="confirmPassword" placeholder="Подтвердите пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно добавления места -->
+    <div id="addPlaceModal" class="modal">
+        <div class="modal-content">
+            <h2>Добавить новое место</h2>
+            <form id="addPlaceForm" class="place-form">
+                <input type="text" name="name" placeholder="Название места" required>
+                <textarea name="description" placeholder="Описание" required></textarea>
+                <input type="text" name="location" placeholder="Адрес" required>
+                <input type="text" name="coordinates" placeholder="Координаты (опционально)">
+                <div class="image-upload">
+                    <label for="placeImage">
+                        <i class="fas fa-camera"></i> Добавить фото
+                    </label>
+                    <input type="file" id="placeImage" name="image" accept="image/*">
+                    <div id="placeImagePreview"></div>
+                </div>
+                <button type="submit">Добавить место</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания путешествия -->
+    <div id="createTripModal" class="modal">
+        <div class="modal-content">
+            <h2>Создать новое путешествие</h2>
+            <form id="createTripForm" class="trip-form">
+                <input type="text" name="title" placeholder="Название путешествия" required>
+                <div class="date-inputs">
+                    <div class="input-group">
+                        <label>Дата начала:</label>
+                        <input type="date" name="start_date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Дата окончания:</label>
+                        <input type="date" name="end_date" required>
+                    </div>
+                </div>
+                <textarea name="description" placeholder="Описание путешествия" required></textarea>
+                <div class="input-group">
+                    <label>Бюджет:</label>
+                    <input type="number" name="budget" placeholder="Бюджет в рублях" required>
+                </div>
+                <div class="places-selector">
+                    <label>Выберите места для посещения:</label>
+                    <div id="selectedPlaces" class="selected-places">
+                        <!-- Выбранные места будут добавляться сюда -->
+                    </div>
+                    <button type="button" id="addPlacesToTrip">
+                        <i class="fas fa-map-marker-alt"></i> Добавить места
+                    </button>
+                </div>
+                <div class="privacy-settings">
+                    <label>Видимость:</label>
+                    <select name="visibility">
+                        <option value="public">Публичное</option>
+                        <option value="friends">Только друзья</option>
+                        <option value="private">Приватное</option>
+                    </select>
+                </div>
+                <button type="submit">Создать путешествие</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html> 
